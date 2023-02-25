@@ -1,7 +1,10 @@
 const router = require("express").Router();
+const dotenv = require("dotenv");
 
 const axios = require("axios");
 const {response} = require("express");
+
+dotenv.config();
 
 const options = {
     method: 'GET',
@@ -19,15 +22,15 @@ const options = {
     }
 };
 
-
-router.get("/", async (req, res) => {
-    try {
-        const pins = (await axios.request(options)).request.data;
-        res.status(200).json(pins);
-    } catch (err) {
-        res.status(500).json(err);
-    }
+router.get("/:icon", async (req, res) => {
+    options.params.symbol = req.params.icon;
+    console.log(req.params.icon);
+    axios.request(options).then(function (response) {
+        console.log(response.data);
+        res.status(200).json(response.data);
+    }).catch(function (error) {
+        console.error(error);
+    });
 });
-
 
 module.exports = router;
